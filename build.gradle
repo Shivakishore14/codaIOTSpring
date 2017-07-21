@@ -1,0 +1,58 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'org.akhikhl.gretty:gretty:+'
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'war'
+apply from: 'https://raw.github.com/akhikhl/gretty/master/pluginScripts/gretty.plugin'
+gretty {
+    httpPort = 8080
+    contextPath = '/codaIOTSpring'
+    servletContainer = 'tomcat8'
+}
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile (
+            'org.springframework:spring-context:4.3.9.RELEASE',
+            'org.springframework:spring-webmvc:4.3.9.RELEASE',
+            'org.hibernate:hibernate-validator:5.4.1.Final',
+            'javax.validation:validation-api:1.1.0.Final',
+            'com.googlecode.json-simple:json-simple:1.1.1',
+            'mysql:mysql-connector-java:5.1.40',
+            'org.slf4j:slf4j-api:1.7.10',
+            'org.springframework:spring-jdbc:2.0.6',
+            'org.springframework.security:spring-security-web:4.2.3.RELEASE',
+            'org.springframework.security:spring-security-config:4.2.3.RELEASE',
+            'javax.servlet.jsp:jsp-api:2.1',
+            'javax.servlet:jstl:1.2'
+    )
+    providedCompile(
+            'javax.servlet:javax.servlet-api:3.1.0',
+    )
+    runtime(
+    		'org.springframework:spring-context:4.3.9.RELEASE',
+            'org.springframework:spring-webmvc:4.3.9.RELEASE',
+            'org.hibernate:hibernate-validator:5.4.1.Final',
+            'javax.validation:validation-api:1.1.0.Final',
+            'com.googlecode.json-simple:json-simple:1.1.1',
+            'mysql:mysql-connector-java:5.1.40',
+            'org.slf4j:slf4j-api:1.7.10',
+            'org.springframework:spring-jdbc:2.0.6',
+            'org.springframework.security:spring-security-web:4.2.3.RELEASE',
+            'org.springframework.security:spring-security-config:4.2.3.RELEASE',
+            'javax.servlet.jsp:jsp-api:2.1',
+    		'javax.servlet:jstl:1.2'
+    )
+}

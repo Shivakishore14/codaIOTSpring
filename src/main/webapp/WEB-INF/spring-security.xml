@@ -1,0 +1,47 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/security
+	http://www.springframework.org/schema/security/spring-security-4.2.xsd">
+	
+	<beans:bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+
+		<beans:property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<beans:property name="url" value="jdbc:mysql://localhost:3306/coda?useSSL=false" />
+		<beans:property name="username" value="test" />
+		<beans:property name="password" value="test" />
+	</beans:bean>
+    <!-- enable use-expressions -->
+	<http auto-config="true" use-expressions="true">
+
+		<intercept-url pattern="/user/dashboard/temp**" access="hasAnyRole('user','admin')" />
+
+		<!-- access denied page -->
+		<access-denied-handler error-page="/403" />
+
+		<form-login
+		    login-page="/user/login"
+		    default-target-url="/user"
+			authentication-failure-url="/user/login?invalid=error"
+			username-parameter="email"
+			password-parameter="password" />
+		<logout logout-success-url="/user/login?option=logout"  />
+		<!-- enable csrf protection -->
+		<csrf/>
+	</http>
+
+	<!-- Select users and user_roles from database -->
+	<authentication-manager>
+	  <authentication-provider>
+		<jdbc-user-service data-source-ref="dataSource"
+		  users-by-username-query=
+		    "select email, password, 'true' as enabled from users where email=?"
+		  authorities-by-username-query=
+		    "select userid, role from user_company_mapping where userid in (select id from users where email=?) limit 1 " />
+	  </authentication-provider>
+	</authentication-manager>
+
+</beans:beans>
